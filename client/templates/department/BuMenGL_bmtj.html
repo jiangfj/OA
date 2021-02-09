@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="名榜,wangid">
+    <title>WangID办公管理系统</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/children.css">
+
+    <!-- 在线图标库 地址：http://fontawesome.dashgame.com/-->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- layui css -->
+	<link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/static/css/laydate.css" media="all">
+	<script type="text/javascript" src="/static/js/jquery-1.11.0.min.js"></script>
+	<!-- layui js -->
+<!--	<script src="/static/js/layui.js"></script>-->
+<!--	<script src="/static/js/layui.all.js"></script>-->
+</head>
+
+<body>
+    <div class="wangid_conbox">
+        <!-- 当前位置 -->
+        <div class="zy_weizhi bord_b">
+            <i class="fa fa-home fa-3x"></i>
+            <a href="#" onclick="javascript:top.location.href='/index/index'">首页</a>
+            <span>公司部门添加修改</span>
+        </div>
+        <!-- 内容 -->    
+        <div class="wenxts_ke">
+            <p><i>温馨提示：</i>按需添加公司部门</p>
+        </div>
+        <div class="kehubh_tj_k">
+
+            <ul>  
+                <li  style="height: 38px; overflow:initial;">
+                    <div class="left">部门名称：</div>
+                    <div class="right">
+
+                         <select  id="dep_name" name="dep_name"  >                           <option value="">--选择部门--</option>
+                        <option value="技术部">技术部</option>
+                        <option value="客服部">客服部</option>
+                        <option value="人事部">人事部</option>
+                        <option value="销售部">销售部</option>
+                        <option value="后勤部">后勤部</option>
+                        <option value="行政部">行政部</option>
+                        <option value="行政部">市场部</option>
+
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <div class="left"> &nbsp;</div>
+                    <div class="right"> 
+<!--                        <button class="button_qr"  id="add_department" onclick="show()">确定添加</button>-->
+                        <a href="javascript:show()">添加</a>
+                    </div>
+                </li>
+            </ul> 
+
+        </div>
+    </div>   
+    
+	<!-- houl --> 
+	<!-- 结束 -->
+    <!-- layui js -->
+
+
+</body>
+<script>
+    function show(){
+        var department=$('#dep_name').val();
+        var post_data={"department":department}
+        console.log(department);
+        	$.ajax({
+			url:'http://127.0.0.1:8000/v1/department/add_department',
+			type:'post',
+			dataType:'json',
+			data:JSON.stringify(post_data),
+			contentType:'application/json',
+
+			success:function(res){
+				if(res.code==200){
+					alert("添加成功");
+				    window.location.href="/department"
+					}else{
+					    alert(res.error);
+				    }
+			}
+		    })
+    }
+    <!--	******************************************-->
+$(function(){
+
+    	if (!window.localStorage.getItem('oa_username'))
+    		{
+    		alert("请登录！");
+    		window.location.href = "/user/login";
+    	}
+    })
+<!--	******************************************-->
+</script>
+
+</html>

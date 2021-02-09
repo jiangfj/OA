@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="名榜,wangid">
+    <title>WangID办公管理系统</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="../../static/css/children.css">
+
+    <!-- 在线图标库 地址：http://fontawesome.dashgame.com/-->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- layui css -->
+
+    <link rel="stylesheet" href="../../static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/laydate.css" media="all">
+    <script type="text/javascript" src="../../static/js/jquery-1.11.0.min.js"></script>
+    <!-- layui js -->
+    <script src="../../static/js/layui.js"></script>
+    <script src="../../static/js/layui.all.js"></script>
+
+</head>
+
+<body>
+<div class="wangid_conbox">
+    <!-- 当前位置 -->
+    <div class="zy_weizhi bord_b">
+        <i class="fa fa-home fa-3x"></i>
+        <a href="/index/index">首页</a>
+        <span>公司公告</span>
+
+        <a href="/notice/notice_add"
+           style="float:right;
+               font-size: 20px;
+               color: #205b9e">添加</a>
+    </div>
+    <!-- 筛选 -->
+    <div class="shuaix">
+        <div class="right">
+            <input type="text" placeholder="请输关键字查询" class="name">
+            <input class="chazhao" type="submit" value="查询"
+                   style="width: 100px;height: 30px;background-color: #205b9e;cursor: pointer">
+        </div>
+    </div>
+    <!-- 内容 -->
+    <table class="layui-table" lay-filter="mylist" lay-size="lg">
+        <thead>
+        <tr>
+            <th lay-data="{type:'checkbox',fixed:'left'}"></th>
+            <th lay-data="{field:'dep_name', align:'center',width:100}">序号</th>
+            <th lay-data="{field:'username',align:'center', minWidth:600}">主题</th>
+            <th lay-data="{field:'job_no',align:'center',minWidth:130}">发布时间</th>
+
+            <th lay-data="{field:'name',align:'center', minWidth:170}">操作</th>
+            <th lay-data="{field:'name',align:'center', minWidth:170}">操作</th>
+
+        </tr>
+        </thead>
+
+        <tbody class="biaoqian">
+            <tbody class="123">
+
+<!--        <tr>-->
+            <!--            <td></td>-->
+            <!--            <td>{{ forloop.counter }}</td>-->
+            <!--            <td>-->
+            <!--                <a href="/notice?id={{ notice.id }}">-->
+            <!--                    {{ notice.title }}-->
+            <!--                </a>-->
+            <!--            </td>-->
+            <!--            <td>{{ notice.created_time }}</td>-->
+            <!--            <td>-->
+            <!--                <a href="/notice_update?id={{ notice.id }}">修改</a>-->
+            <!--                <a href="/notice/notice_delete?id={{ notice.id }}" onclick="return confirm('是否删除?')">删除</a>-->
+            <!--            </td>-->
+
+<!--        </tr>-->
+<!--        {% endfor %}-->
+            </tbody>
+        </tbody>
+    </table>
+
+</div>
+<script type="text/javascript">
+
+	//静态表格
+//    layui.use('table',function(){
+//    	var table = layui.table;
+//    	var count = parseInt('{{count}}');
+//		//转换静态表格
+//		table.init('mylist', {
+//		  height: 'full-130' //高度最大化减去差值,也可以自己设置高度值：如 height:300
+//		  ,count: count //数据总数 服务端获得
+//		  ,limit: 10 //每页显示条数 注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
+//		  ,page:true //开启分页
+//		  ,toolbar: '#toolbarDemo'//工具栏
+//		  ,defaultToolbar:['filter', 'exports']
+//		  ,limits:[10, 20, 30, 40, 50]//分页显示每页条目下拉选择
+//		  ,cellMinWidth: 60//定义全局最小单元格宽度，其余自动分配宽度
+//		});
+//	})
+	var html_value="";
+	var html_value2="";
+	var url="http://127.0.0.1:8000/v1/notice_list/list"
+	var token = window.localStorage.getItem('oa_token');
+	$.ajax({
+		type:"get",
+		url:url,
+		dataType:'json',
+		contentType:'application/json',
+		beforeSend: function(request) {
+                                    request.setRequestHeader("Authorization", token);
+                                    },
+		"success":function(res){
+			if (200 == res.code){
+			var data=res.obj;
+			for(var i=0;i<data.length;i++){
+			    var id =i+1;
+			    var uid=data[i].id
+			var title =data[i].title;
+			var created_time =data[i].created_time;
+			html_value+=' <tr>';
+			html_value+='<td></td>';
+            html_value+='<td>'+ id+' </td>';
+            html_value+='<td>';
+            html_value+='<a href="/notice/notice?id='+ uid + '">';
+            html_value+=title;
+            html_value+='</a>';
+            html_value+='</td>';
+            html_value+='<td>'+ created_time+' </td>';
+            html_value+='<td>';
+            html_value+='<a href="/notice/notice_update?id='+uid+'">修改</a>';
+
+            html_value+='</td>';
+            html_value+='<td>';
+            html_value+='<a href="javascript:show('+uid+') "  >删除</a>'
+            html_value+='</td>';
+            html_value+='</tr>';
+			$(".123").html(html_value);
+			}
+           $('.chazhao').click(function(){
+		    var a=$('.123');
+			    //console.log(a);
+			a.remove();;
+			    //alert(111);
+			    var name=$('.name').val();
+                name_data={'name':name};
+               $.ajax({
+                  type:"POST",
+                  url:url,
+                  dataType:'json',
+                  data:JSON.stringify(name_data),
+                  contentType:'application/json',
+                  beforeSend: function(request) {
+                                    request.setRequestHeader("Authorization", token);
+                                    },
+                  "success":function(result){
+                     if (200 == result.code){
+                     var resd=result.obj;
+                     var title=resd.title;
+                     var created_time =resd.created_time;
+                     console.log(resd)
+                    html_value2+=' <tr>';
+			        html_value2+='<td></td>';
+                    html_value2+='<td>'+ id+' </td>';
+                    html_value2+='<td>';
+                    html_value2+='<a href="/notice/notice?id='+ uid + '">';
+                    html_value2+=title;
+                    html_value2+='</a>';
+                    html_value2+='</td>';
+                    html_value2+='<td>'+ created_time+' </td>';
+                    html_value2+='<td>';
+
+                    html_value2+='<a href="/notice/notice_update?id='+uid+'">修改</a>';
+                    html_value2+='<a href="javascript:show('+uid+') " >删除</a>';
+                    html_value2+='</td>';
+                    html_value2+='</tr>';
+			        $(".biaoqian").html(html_value2);
+             }else{
+             alert('数据未找到')
+             }
+          }
+       })
+       })
+			}
+		}
+	})
+
+
+    function show(data){
+            alert("是否删除？")
+           var _id=data;
+           var _uid={"id":_id}
+           var _url="http://127.0.0.1:8000/v1/notice_del/del"
+            //console.log(_id);
+             $.ajax({
+                  type:"POST",
+                  url:_url,
+                  dataType:'json',
+                  data:JSON.stringify(_uid),
+                  contentType:'application/json',
+                  beforeSend: function(request) {
+                                    request.setRequestHeader("Authorization", token);
+                                    },
+                  "success":function(result){
+                  if (200 == result.code){
+                  alert('删除成功！');
+                  window.location.href='/notice/notice_list';
+                  }else{
+                  alert('删除失败！');
+                  window.location.href='/notice/notice_list';
+                  }
+                  }
+                  })
+                  }
+
+<!--	******************************************-->
+$(function(){
+
+    	if (!window.localStorage.getItem('oa_username'))
+    		{
+    		alert("请登录！");
+    		window.location.href = "/user/login";
+    	}
+    })
+<!--	******************************************-->
+
+</script>
+
+
+</body>
+
+</html>

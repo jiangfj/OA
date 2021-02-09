@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天气</title>
+</head>
+	<script type="text/javascript" src="/static/js/jquery-1.11.0.min.js">
+    </script>
+
+<body>
+    <div id="show">
+
+        <h2>查看天气</h2>
+        <li><input type="text" id="city" name="city" ></li>
+
+        <input type="button" value="查看天气" onclick="check_weather()">
+        <a href="#" onclick="javascript:top.location.href='/index/index'">首页</a>
+    </div>
+
+<!--    <div>-->
+<!--        <input type="text" id="show">-->
+<!--    </div>-->
+
+</body>
+    <script>
+        function check_weather(){
+            var city = $('#city').val()
+            var post_data = {
+                'city':city
+            }
+            var html_body = ''
+            //console.log($('#show'))
+            //console.log(city)
+        $.ajax({
+            type:'post',
+            contentType:'application/json',
+            dataType:"json",
+            url:"http://127.0.0.1:8000/v1/weather/list",
+            data:JSON.stringify(post_data),
+            success:function (result) {
+            if (200 == result.code){
+                alert('欢迎您查看天气,祝您天天好心情!'),
+                //window.location.reload()
+                //alert(result)
+                html_body += '<ul>' + '<li>' +'title:'+ result['content']['title'] + '</li>';
+                html_body += '<li>' + '当前温度:' + result['content']['当前温度'] + '</li>';
+                html_body += '<li>' + '今日天气:' + result['content']['今日天气'] + '</li>';
+                html_body += '<li>' + '湿度:' + result['content']['湿度'] + '</li>';
+                html_body += '<li>' + '风向:' + result['content']['风向'] + '</li>';
+                html_body += '<li>' + 'PM:' + result['content']['PM'] + '</li>';
+                html_body += '</ul>';
+
+                $('#show').html(html_body);
+                }else{
+                    alert(result.error)
+                }
+            }
+        });
+
+        }
+
+    </script>
+</html>

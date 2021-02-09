@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="名榜,wangid">
+    <title>WangID办公管理系统</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="../../static/css/children.css">
+
+    <!-- 在线图标库 地址：http://fontawesome.dashgame.com/-->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- layui css -->
+    <link rel="stylesheet" href="../../static/css/layui.css">
+    <script type="text/javascript" src="../../static/js/jquery-1.11.0.min.js"></script>
+    
+</head>
+
+<body>
+    <div class="wangid_conbox">
+        <!-- 当前位置 -->
+        <div class="zy_weizhi bord_b">
+            <i class="fa fa-home fa-3x"></i>
+            <a href="/index/index" >首页</a>
+            <a href="/notice/notice_list">公司公告</a>
+            <span>公司公告添加</span>
+        </div>
+        <!-- 内容 -->    
+        <div class="wenxts_ke">
+            <p><i>温馨提示：</i>按需添加公司公告，时间越新就越靠前</p>
+        </div>
+        <div class="kehubh_tj_k">
+            <ul>
+            <li>
+                        <div class="left">主题：</div>
+                        <div class="right">
+                            <input type="text" class="title" placeholder="请输入公告主题" autocomplete="off" class="layui-input">
+                        </div>
+            </li>
+            <li>
+                        <div class="left">内容：</div>
+                        <div class="right">
+                            <textarea class="content" required lay-verify="required" placeholder="请输入公告内容" class="layui-textarea"></textarea>
+                        </div>
+            </li>
+            <li>
+                        <div class="left"> &nbsp;</div>
+                        <div class="right">
+                            <button class="button_qr">
+                                <input  onclick="tianjia()" type="submit" value="确定添加">
+                            </button>
+                        </div>
+                </li>
+            </ul>
+
+        </div>
+    </div>   
+    
+	<!-- houl --> 
+	<!-- 结束 -->
+    <!-- layui js -->
+    <script src="../../static/js/layui.js"></script>
+
+</body>
+
+</html>
+<script>
+<!--layui.use(['form', 'layedit', 'laydate'], function(){-->
+<!--    var form = layui.form-->
+<!--    ,layer = layui.layer-->
+<!--    ,layedit = layui.layedit-->
+<!--    ,laydate = layui.laydate;-->
+<!--});-->
+<!--layui.use('laydate', function(){-->
+<!--  var laydate = layui.laydate; -->
+<!--  //年选择器 -->
+<!--  laydate.render({-->
+<!--    elem: '#test2'-->
+<!--  });-->
+<!--   //时间选择器-->
+<!--   laydate.render({-->
+<!--    elem: '#test2_r'-->
+<!--    ,type: 'time'-->
+<!--  });-->
+<!--});-->
+    var url="http://127.0.0.1:8000/v1/notice_add/add"
+
+	function tianjia(){
+	    var token = window.localStorage.getItem('oa_token');
+		var title=$('.title').val();
+		var content=$('.content').val();
+		data={'title':title,'content':content};
+		console.log(data);
+		$.ajax({
+			type:"POST",
+			url:url,
+			dataType:'json',
+			data:JSON.stringify(data),
+			 beforeSend: function(request) {
+                                    request.setRequestHeader("Authorization", token);
+                                    },
+			contentType:'application/json',
+			"success":function(result){
+				if (200 == result.code){
+				    var resd=result.obj;
+				    console.log(resd);
+				    window.location.href='/notice/notice_list';
+				}
+				else if(301 == result.code){
+				    alert('添加失败！标题重复')
+				}
+				else{
+				    alert('添加失败！')
+				}
+			}
+		})
+
+	}
+
+
+
+
+<!--	******************************************-->
+$(function(){
+
+    	if (!window.localStorage.getItem('oa_username'))
+    		{
+    		alert("请登录！");
+    		window.location.href = "/user/login";
+    	}
+    })
+<!--	******************************************-->
+
+
+</script>

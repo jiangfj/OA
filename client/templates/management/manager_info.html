@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit"/>
+	<meta name="force-rendering" content="webkit"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="名榜,wangid">
+	<title>WangID办公管理系统</title>
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="/static/css/style.css">
+	 <link rel="stylesheet" href="/static/css/children.css">
+
+	<!-- 在线图标库 地址：http://fontawesome.dashgame.com/-->
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- layui css -->
+
+	<link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="/static/css/laydate.css" media="all">
+	<script type="text/javascript" src="/static/js/jquery-1.11.0.min.js"></script>
+
+</head>
+
+<body>
+<div class="wangid_conbox">
+	<!-- 当前位置 -->
+	<div class="zy_weizhi bord_b">
+		<i class="fa fa-home fa-3x"></i>
+		<a href="#" onclick="javascript:top.location.href='/index/index'">首页</a>
+		<a href="#" onclick="javascript:top.location.href='/management/add'">添加员工</a>
+		<a href="#" onclick="javascript:top.location.href='/management/search'">查询员工</a>
+            <span>公司员工列表</span>
+	</div>
+	<!-- 筛选 -->
+	<form class="layui-form" action="/management/search" method="post">
+		<div class="layui-form-item">
+
+
+
+  </div>
+
+
+	</form>
+
+
+	<!-- 下面写内容 -->
+	<table class="layui-table" lay-filter="mylist" lay-size="lg">
+		<thead>
+			<tr>
+<!--				<th lay-data="{type:'checkbox',fixed:'left'}"></th>-->
+				<th lay-data="{field:'id',hide:'true', align:'center',width:160}">id</th>
+				<th lay-data="{field:'dep_name', align:'center',width:160}">部门名称</th>
+				<th lay-data="{field:'username',align:'center', minWidth:170}">员工账号</th>
+				<th lay-data="{field:'name',align:'center', minWidth:170}">员工姓名</th>
+				<th lay-data="{field:'position_name',align:'center',minWidth:260}">部门职位</th>
+				<th lay-data="{field:'job_no',align:'center',minWidth:130}">工号</th>
+				<th lay-data="{field:'sex',align:'center',width:130}">性别</th>
+                <th lay-data="{field:'power',align:'center',minWidth:130}">权限</th>
+<!--				<th lay-data="{field:'img',align:'center',minWidth:100}">简历图片</th>-->
+<!--				<th lay-data="{field:'create_time',align:'center',minWidth:260}">入职时间</th>-->
+
+<!--				<th lay-data="{field:'option',align:'center',width:130,toolbar:'#barDemo',fixed: 'right'}">操作</th>-->
+
+			</tr>
+		</thead>
+		<tbody>
+
+
+
+
+		</tbody>
+	</table>
+	<script type="text/html" id="barDemo">
+
+<!--		<a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>-->
+<!--		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+
+	</script>
+</div>
+<script type="text/html" id="toolbarDemo">
+	<div class="layui-btn-container" id="add_management" >
+		<button  class="layui-btn layui-btn-sm" lay-event="add_management">入职</button>
+	</div>
+</script>
+<script type="text/javascript">
+
+	$(function (){
+
+		var tbody_body='';
+		$.ajax({
+			url:'http://127.0.0.1:8000/v1/management/list',
+			type:'get',
+			dataType:'json',
+			data:JSON.stringify(),
+			contentType:'application/json',
+			success:function(res){
+				if(res.code==200){
+					var data = res.data;
+					//alert(res.data);
+					//alert(111);
+					for (i in data){
+						tbody_body += '<tr>';
+						tbody_body += '<td style="color:red;text-align:center;">'+data[i].id+'</td>';
+						tbody_body += '<td style="text-align:center;">'+data[i].dep_name+'</td>';
+						tbody_body += '<td style="text-align:center;">'+data[i].username+'</td>';
+						tbody_body += '<td style="text-align:center;">'+data[i].name+'</td>';
+						tbody_body += '<td style="text-align:center;">'+data[i].position_name+'</td>';
+						tbody_body += '<td style="text-align:center;">'+data[i].job_no+'</td>';
+						tbody_body += '<td style="text-align:center;">'+data[i].sex+'</td>';
+						tbody_body += '<td style="text-align:center;">'+data[i].power+'</td>';
+						//tbody_body += '<td style="text-align:center;">'+'<a class="layui-btn layui-btn-xs" lay-event="edit" >'+"修改"+'</a>';
+						//tbody_body += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">'+"删除"+'</a>';
+						tbody_body += '</td>';
+						tbody_body += '</tr>';
+						};
+					$('thead').after(tbody_body);
+				}else{
+					alert(res.error);
+				}
+			}
+		})
+	})
+
+
+
+
+
+
+<!--	******************************************-->
+$(function(){
+
+    	if (!window.localStorage.getItem('oa_username'))
+    		{
+    		alert("请登录！");
+    		window.location.href = "/user/login";
+    	}
+    })
+<!--	******************************************-->
+
+</script>
+
+
+</body>
+
+</html>
